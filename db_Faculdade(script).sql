@@ -27,3 +27,12 @@ CREATE TABLE CURSO(
    CONSTRAINT fk_id_depart FOREIGN KEY (id_depart)
       REFERENCES DEPARTAMENTO (id_depart)
 );
+
+CREATE TABLE TURMA(
+    id_turma INT(2) PRIMARY KEY AUTO_INCREMENT,
+    num_aluno INT(2) NOT NULL,
+    data_inicio DATE(4) NOT NULL,
+    data_fim DATE(4) NOT NULL,
+    CONSTRAINT fk_id_curso FOREIGN KEY (id_curso)
+      REFERENCES CURSO (id_curso)
+);
