@@ -1,0 +1,118 @@
+Identificando entidades, relacionamentos e Atributos:
+
+
+Objetivo do Banco de Dados: Realizar o controle centralizado de alunos, professores, cursos, disciplinas, historico escolar e turmas.
+
+#Entidades: ALUNO, PROFESSOR, DEPARTAMENTO, TURMA, HISTORICO, DISCIPLINA_CURSO, DISCIPLINA_HIST, DISCIPLINA_PROF
+ CURSO E DISCIPLINA.
+
+#Relacionamentos: 
+     -ALUNO matriculado CURSO;
+     
+     -ALUNO realiza DISCIPLINA;
+   
+     -ALUNO cursa DISCIPLINA;
+    
+     -DISCIPLINA depende CURSO;
+     
+     -PROFESSOR ministra DISCIPLINA;
+     
+     -PROFESSOR pertence DEPARTAMENTO;
+     
+     -DEPARTAMENTO responsável por DISCIPLINA;
+     
+     -DEPARTAMENTO controla CURSO;
+     
+     -DISCIPLINA depende de DISCIPLINA
+     
+
+-Atributos de Alunos:
+        #ra 
+        #nome_aluno
+        #sobrenome_aluno
+        #endereço
+           -bairro
+           -rua
+           -cep
+           -número
+        #id_curso.
+        #*telefone
+        #status
+        #filiação
+        #sexo
+        #*contato(whatsapp, e-mail)
+        #id_turma
+        #cpf
+        
+    
+    
+    
+-Atributos de Professor: 
+        #id_professor
+        #id_departamento
+        #nome_prof
+        #sobrenome_prof
+        #status
+
+
+        
+ -Atributos de Disciplina: 
+        #id_disciplina
+        #nome_disc
+        #descrição curricular
+        #id_departamento
+        #num_alunos
+        #carga_horaria
+    
+    
+     
+-Atributos de Departamento:
+        #id_departamento;
+        #nome_departamento;
+        #localizacao
+        
+-Atributos de Curso:
+        #id_curso
+        #nome_curso
+        #id_departamento
+        
+        
+-Atributos de Turma:
+        #id_turma
+        #periodo
+        #id_curso
+        #num_aluno
+        #data_inicio
+        #data_fim
+        
+        
+-Atributos de historico:
+        #id_historico
+        #periodo_realizacao
+        #ra
+        #id_disciplina
+        
+        
+-Atributos de HISTORIC_DISC(entidade associativa):
+        #id_historico
+        #id_disciplina
+        #nota
+        #frequencia
+        
+        
+-Atributos de CURSO_DISC(entidade associativa):
+        #id_curso
+        #id_disciplina
+        
+        
+-Atributos de PROFESSOR_DISC(entidade associativa):
+        #id_professor
+        #id_disciplina
+        
+        
+-Atributos de ALUNO_DISC(entidade associativa):
+        #id_aluno
+        #id_disciplina
+        
+        
+        

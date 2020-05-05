@@ -1,0 +1,22 @@
+         Fases do Projeto(fases da modelagem)
+
+Fases:
+
+#1.Levantamento dos Requisitos
+
+#2.Identificação de Entidades e Relacionamentos
+
+#3.Diagrama ER(modelo conceitual)
+    -Diagrama ER: Cardinalidades;
+    -Diagrama ER: Eliminando N:M
+
+#4.Dicionário de Dados
+
+#5.Normalização(modelo lógico tabelas)
+
+#6.Implementação(modelo físico)
+
+#7.Testes Básicos
+
+obs: Lembrando que eventualmento vão aparecendo novas entidades, atributos, relacionamentos, pois o trabalho
+de análise ainda continua por todo o projeto para diminuir erros na Implementação do banco de dados.
