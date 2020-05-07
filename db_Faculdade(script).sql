@@ -5,40 +5,40 @@ USE db_Faculdade;
 
 
 CREATE TABLE DEPARTAMENTO(
-    id_depart INT(2) PRIMARY KEY AUTO_INCREMENT,
+    id_depart SMALLINT PRIMARY KEY AUTO_INCREMENT,
     nome_depart VARCHAR(20) NOT NULL,
     localizacao VARCHAR(8) NOT NULL
 );
 
 CREATE TABLE PROFESSOR( 
-   id_professor INT(2) PRIMARY KEY AUTO_INCREMENT,
+   id_professor SMALLINT PRIMARY KEY AUTO_INCREMENT,
    nome_prof VARCHAR(20) NOT NULL,
    sobrenome VARCHAR(50) NOT NULL,
-   id_depart_for INT(2),
+   id_depart_for SMALLINT,
    status TINYINT(1),
    CONSTRAINT fk_id_depart FOREIGN KEY (id_depart) 
      REFERENCES DEPARTAMENTO (id_depart) 
 );
 
 CREATE TABLE CURSO(
-   id_curso INT(2) PRIMARY KEY AUTO_INCREMENT,
+   id_curso SMALLINT PRIMARY KEY AUTO_INCREMENT,
    nome_curso VARCHAR(40) NOT NULL,
-   id_depart_for INT(2),
+   id_depart_for SMALLINT,
    CONSTRAINT fk_cod_depart FOREIGN KEY (id_depart)
       REFERENCES DEPARTAMENTO (id_depart)
 );
 
 CREATE TABLE TURMA(
-    id_turma INT(2) PRIMARY KEY AUTO_INCREMENT,
-    num_aluno INT(2) NOT NULL,
-    data_inicio DATE(4) NOT NULL,
-    data_fim DATE(4) NOT NULL,
+    id_turma SMALLINT PRIMARY KEY AUTO_INCREMENT,
+    num_aluno SMALLINT NOT NULL,
+    data_inicio DATE NOT NULL,
+    data_fim DATE NOT NULL,
     CONSTRAINT fk_id_curso FOREIGN KEY (id_curso)
       REFERENCES CURSO (id_curso)
 );
 
 CREATE TABLE ALUNO(
-    ra INT(6) PRIMARY KEY AUTO_INCREMENT,
+    ra SMALLINT PRIMARY KEY AUTO_INCREMENT,
     nome_aluno VARCHAR(20) NOT NULL,
     sobrenome_aluno VARCHAR(50) NOT NULL,
     status TINYINT(1) NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE ALUNO(
     whatsapp VARCHAR(11),
     email VARCHAR(60) NOT NULL,
     cpf VARCHAR(11) NOT NULL, 
-    id_turma INT(2) NOT NULL,
+    id_turma SMALLINT NOT NULL,
     CONSTRAINT fk_id_turma_aluno FOREIGN KEY (id_turma) 
        REFERENCES TURMA (id_turma),
     CONSTRAINT fk_id_curso_aluno FOREIGN KEY (id_curso)
@@ -56,12 +56,12 @@ CREATE TABLE ALUNO(
 );
 
 CREATE TABLE TIPO_LOGRADOURO(
-   id_tipo_logr INT(1) PRIMARY KEY AUTO_INCREMENT,
+   id_tipo_logr SMALLINT PRIMARY KEY AUTO_INCREMENT,
    tipo_logradouro VARCHAR(11) NOT NULL
 );
 
 CREATE TABLE ENDERECO_ALUNO(
-    id_end_aluno INT(1) PRIMARY KEY AUTO_INCREMENT,
+    id_end_aluno SMALLINT PRIMARY KEY AUTO_INCREMENT,
     ra_for INT NOT NULL,
     id_tipo_logr_for INT NOT NULL,
     complemento VARCHAR(20) NOT NULL,
@@ -75,13 +75,13 @@ CREATE TABLE ENDERECO_ALUNO(
 );
 
 CREATE TABLE TELEFONE_TIPO(
-    id_tipo_tel INT(1) PRIMARY KEY AUTO_INCREMENT,
+    id_tipo_tel SMALLINT PRIMARY KEY AUTO_INCREMENT,
     tipo_tel VARCHAR(8) NOT NULL
 
 );
 
 CREATE TABLE TELEFONE_ALUNO(
-   id_tel_aluno INT(1) PRIMARY KEY AUTO_INCREMENT,
+   id_tel_aluno SMALLINT PRIMARY KEY AUTO_INCREMENT,
    ra_for INT NOT NULL,
    telefone VARCHAR(11) NOT NULL,
    CONSTRAINT fk_id_ra_telefone FOREIGN KEY (ra) 
@@ -91,29 +91,31 @@ CREATE TABLE TELEFONE_ALUNO(
 );
 
 CREATE TABLE DISCIPLINA(
-   id_disciplina INT(2) PRIMARY KEY AUTO_INCREMENT,
-   id_disciplina_depende INT NULL, /*auto-relacionamento disciplina depende de disciplina*/
+   id_disciplina SMALLINT PRIMARY KEY AUTO_INCREMENT,
+   id_disciplina_depende SMALLINT NULL, /*auto-relacionamento disciplina depende de disciplina*/
    nome_disciplina VARCHAR(30) NOT NULL,
-   id_depart_for INT(2) NOT NULL,
+   id_depart_for SMALLINT NOT NULL,
    descricao VARCHAR(200),
-   num_aluno INT(2) NOT NULL,
-   carga_horaria INT(2) NOT NULL,
+   num_aluno SMALLINT NOT NULL,
+   carga_horaria SMALLINT NOT NULL,
    CONSTRAINT fk_id_depart_disc FOREIGN KEY (id_depart)
      REFERENCES DEPARTAMENTO (id_depart)
+   CONSTRAINT fk_id_disciplina_dep FOREIGN KEY (id_disciplina_depende)
+     REFERENCES DISCIPLINA (id_disciplina)
 );
 
 CREATE TABLE HISTORICO(
-   id_historico INT(2) PRIMARY KEY AUTO_INCREMENT,
-   ra_for INT NOT NULL,
-   data_ini DATE(4) NOT NULL,
-   data_fin DATE(4),
+   id_historico SMALLINT PRIMARY KEY AUTO_INCREMENT,
+   ra_for SMALLINT NOT NULL,
+   data_ini DATE NOT NULL,
+   data_fin DATE,
    CONSTRAINT fk_id_ra_historico FOREIGN kEY (ra)
      REFERENCES ALUNO (ra)
 ); 
 
 CREATE TABLE HISTORICO_DISC(
-   id_historico_for INT NOT NULL,
-   id_disciplina_for INT NOT NULL,
+   id_historico_for SMALLINT NOT NULL,
+   id_disciplina_for SMALLINT NOT NULL,
    nota DECIMAL(8) NOT NULL,
    frequencia VARCHAR(2) NOT NULL,
    PRIMARY KEY(id_historico, id_disciplina),
@@ -124,8 +126,8 @@ CREATE TABLE HISTORICO_DISC(
 );
 
 CREATE TABLE CURSO_DISC(
-   id_curso_for INT NOT NULL,
-   id_disciplina_for INT NOT NULL,
+   id_curso_for SMALLINT NOT NULL,
+   id_disciplina_for SMALLINT NOT NULL,
    PRIMARY KEY(id_curso, id_disciplina),
    CONSTRAINT fk_id_curso_disc FOREIGN KEY (id_curso)
      REFERENCES CURSO (id_curso),
@@ -134,8 +136,8 @@ CREATE TABLE CURSO_DISC(
 );
 
 CREATE TABLE PROFESSOR_DISC(
-   id_professor_for INT NOT NULL,
-   id_disciplina_for INT NOT NULL,
+   id_professor_for SMALLINT NOT NULL,
+   id_disciplina_for SMALLINTSMALLINTNOT NULL,
    PRIMARY KEY(id_professor, id_disciplina),
    CONSTRAINT fk_id_professor_disc FOREIGN KEY (id_professor)
      REFERENCES PROFESSOR (id_professor),
@@ -144,8 +146,8 @@ CREATE TABLE PROFESSOR_DISC(
 );
 
 CREATE TABLE ALUNO_DISC(
-   ra_for INT NOT NULL,
-   id_disciplina_for INT NOT NULL,
+   ra_for SMALLINT NOT NULL,
+   id_disciplina_for SMALLINT NOT NULL,
    PRIMARY KEY(ra, id_disciplina),
    CONSTRAINT fk_id_ra_disc FOREIGN KEY (ra) 
      REFERENCES ALUNO (ra),
