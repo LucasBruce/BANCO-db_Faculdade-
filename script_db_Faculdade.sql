@@ -158,6 +158,18 @@ CREATE TABLE ALUNO_DISCIPLINA(
      REFERENCES DISCIPLINA (id_disciplina)
 );
 
+/*script de inserção de dados nas tabelas do banco (carga de dados para teste)*/
 
+INSERT INTO DEPARTAMENTO(nome_departamento, localizacao)
+	VALUES
+	('Ciências Humanas', 'bloco A'),
+	('Matemática', 'bloco B'),
+	('Biológicas', 'bloco C'),
+	('Estágio', 'bloco D');
 
-
+INSERT INTO PROFESSOR(Nome_Professor, Sobrenome_Professor,
+  Status_Professor, id_departamento)
+    VALUES
+    ('Fábio', 'dos Reis', 0, 2),
+    ('Sophie', 'Allemand', 1, 1),
+	('Monica', 'Barroso', 1, 3);
