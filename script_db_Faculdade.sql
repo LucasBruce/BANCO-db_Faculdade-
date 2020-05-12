@@ -31,6 +31,7 @@ CREATE TABLE CURSO(
 CREATE TABLE TURMA(
     id_turma SMALLINT PRIMARY KEY AUTO_INCREMENT,
     num_aluno SMALLINT NOT NULL,
+    periodo VARCHAR(8) NOT NULL,
     data_inicio DATE NOT NULL,
     data_fim DATE NOT NULL,
     id_curso SMALLINT,
@@ -168,8 +169,72 @@ INSERT INTO DEPARTAMENTO(nome_departamento, localizacao)
 	('Estágio', 'bloco D');
 
 INSERT INTO PROFESSOR(Nome_Professor, Sobrenome_Professor,
-  Status_Professor, id_departamento)
+Status_Professor, id_departamento)
     VALUES
     ('Fábio', 'dos Reis', 0, 2),
     ('Sophie', 'Allemand', 1, 1),
 	('Monica', 'Barroso', 1, 3);
+    
+INSERT INTO CURSO(nome_curso, id_departamento)
+	VALUES
+	('Matemática', 2),
+	('Psicologia', 1),
+	('Análise de Sistemas', 2),
+	('Biologia', 3),
+	('História', 1),
+	('Engenharia', 2);
+    
+INSERT INTO TURMA(id_curso, periodo, num_aluno,  
+data_inicio, data_fim)
+    VALUES
+    (2, 'Manhã', 20, '2016-05-12', '2017-10-15'),
+    (1, 'Noite', 10, '2014-05-12', '2020-03-05'),
+    (3, 'Tarde', 15, '2012-05-12', '2014-05-10');
+    
+INSERT INTO DISCIPLINA(nome_disciplina, id_departamento, carga_horaria,
+descricao, numero_aluno)
+    VALUES
+    ('Raciocínio Lógico', 2, 1200, 'Desenvolver o raciocínio lógico', 50),
+    ('Psicologia Cognitiva', 1, 1400, 'Entender o funcionamento do aprendizado', 30),
+    ('Programação em C', 2, 1200, 'Aprender uma linguagem de programação', 20),
+    ('Eletrônica Digital', 2, 300, 'Funcionamento de circuitos digitais', 30);
+    
+INSERT INTO ALUNO(nome_aluno, sobrenome_aluno, cpf, status_aluno,
+id_turma, sexo, id_curso, nome_pai, nome_mae, email, whatsapp)
+    VALUES
+    ('Marcos', 'Aurelio Martins', 14278914536, 1, 2, 'M', 3, 'Marcio Aurelio', 'Maria Aparecida', 'marcosaurelio@gmail.com', 946231249),
+    ('Gabriel', 'Fernando de ALmeida', 14470954536, 1, 1, 'M', 1, 'Adão Almeida', 'Fernanda Almeida', 'gabrielalmeida@yahoo.com', 941741247),
+    ('Beatriz', 'Sonia Meneguel', 1520984537, 1, 3, 'F', 3, 'Samuel Meneguel', 'Gabriela Meneguel', 'beatrizmene@hotmail.com', 945781412),
+    ('Jorge', 'Soares', 14223651562, 1, 3, 'M', 4, 'João Soares', 'Maria Richtzer', 'jorgesoares@gmail.com', 925637857),
+    ('Ana Paula', 'Ferretti', 32968914522, 1, 3, 'M', 5, 'Marcio Ferretti', 'Ana Hoffbahn', 'anapaulaferretti@hotmail', 974267423),
+    ('Mônica', 'Yamaguti', 32988914510, 1, 2, 'F', 6, 'Wilson Oliveira', 'Fernanda Yamaguti', 'monyamaguti@outlook.com',932619560);
+
+INSERT INTO ALUNO_DISCIPLINA(ra, id_disciplina)
+    VALUES
+    (3, 1),
+    (1, 2),
+    (2, 3),
+    (4, 3),
+    (5, 4),
+    (6, 1);
+   
+INSERT INTO CURSO_DISCIPLINA(id_curso, id_disciplina)
+    VALUES
+    (1, 1),
+    (2, 2),
+    (3, 3),
+    (6, 4);
+    
+INSERT INTO PROFESSOR_DISCIPLINA(id_professor, id_disciplina)
+    VALUES
+    (2, 1),
+    (1, 2),
+    (3, 3),
+    (2, 4);
+
+INSERT INTO HISTORICO(ra, data_inicio, data_final)
+    VALUES
+    (2, '2016-05-12', '2017-10-15'),
+    (3, '2014-05-12', '2020-03-05'),
+    (1, '2010-05-12', '2012-05-10');
+
