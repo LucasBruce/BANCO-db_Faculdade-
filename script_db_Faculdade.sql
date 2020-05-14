@@ -238,3 +238,19 @@ INSERT INTO HISTORICO(ra, data_inicio, data_final)
     (3, '2014-05-12', '2020-03-05'),
     (1, '2010-05-12', '2012-05-10');
 
+INSERT INTO TIPO_LOGRADOURO(tipo_logradouro)
+    VALUES
+    ('Rua'),
+    ('Avenida'),
+    ('Alameda'),
+    ('Travessa');
+
+INSERT INTO ENDERECO_ALUNO(ra, id_tipo_logradouro, nome_rua, numero_rua, complemento, cep)
+    VALUES
+    (2, 1, 'das giestas', 255, 'Casa 02', 02854000),
+    (3, 3, 'Lorena', 10, 'Apto 15', 02945000),
+    (1, 2, 'do Cursino', 1248, 'Casa 03', 0851040),
+    (4, 1, 'das Heras', 495, 'Casa 04', 03563142),
+    (5, 3, 'Santos', 1856, 'Casa 05', 04523963),
+    (6, 4, 'Matão', 206, 'Casa 06', 04213650);
+
