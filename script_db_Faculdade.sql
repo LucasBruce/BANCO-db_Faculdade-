@@ -254,7 +254,9 @@ INSERT INTO ENDERECO_ALUNO(ra, id_tipo_logradouro, nome_rua, numero_rua, complem
     (5, 3, 'Santos', 1856, 'Casa 05', 04523963),
     (6, 4, 'Matão', 206, 'Casa 06', 04213650);
 
--- Alterar campo nota da tabela DISCIPLINA_HISTORICO para FLOAT
+/*Alterar campo nota da tabela DISCIPLINA_HISTORICO para FLOAT 
+este comando modifica o tipo do atributo*/
+
 ALTER TABLE DISCIPLINA_HISTORICO MODIFY COLUMN nota FLOAT;
 
 INSERT INTO DISCIPLINA_HISTORICO(id_historico, id_disciplina, nota, frequencia)
@@ -263,18 +265,36 @@ INSERT INTO DISCIPLINA_HISTORICO(id_historico, id_disciplina, nota, frequencia)
     (2, 3, 8.5, 2), /*Gabriel - Programação em C (cod 3)*/
     (3, 1, 6.8, 8); /*Beatriz - Raciocínio Lógico (cod1)*/
     
--- 1. ras, nomes e sobrenomes dos alunos, nomes dos cursos e períodos
+/*1. ras, nomes e sobrenomes dos alunos, nomes dos cursos e períodos*/
+
+SELECT ALUNO.nome_aluno, ALUNO.sobrenome_aluno, 
+CURSO.nome_curso, TURMA.periodo FROM ALUNO
+INNER JOIN CURSO ON CURSO.id_curso = ALUNO.id_curso
+INNER JOIN TURMA ON TURMA.id_turma = ALUNO.id_turma;
 
 /*2. Todas as disciplinas cursadas por um aluno, com suas respectivas notas:
 Aluno: RA 3 (Beatriz) nome, sobrenome, nome da disciplina e nota*/
 
-SELECT A.nome_aluno, A.sobrenome_aluno, D.nome_disciplina, DH.nota 
-FROM ALUNO A INNER JOIN ALUNO_DISCIPLINA AD 
-ON A.ra = AD.ra
+SELECT A.nome_aluno, A.sobrenome_aluno,
+D.nome_disciplina, DH.nota FROM ALUNO A 
+INNER JOIN ALUNO_DISCIPLINA AD
+ON A.ra = AD.ra 
 INNER JOIN DISCIPLINA D 
 ON D.id_disciplina = AD.id_disciplina
-INNER JOIN HISTORICO H 
+INNER JOIN HISTORICO H
 ON A.ra = H.ra
-INNER JOIN DISCIPLINA_HISTORICO DH 
-ON DH.id_historico = H.id_historico
+INNER JOIN DISCIPLINA_HISTORICO DH
+ON H.id_historico = DH.id_historico
 WHERE A.ra = 3;
+
+/*3. Nomes e sobrenomes dos professores, e disciplinas que ministram com suas 
+cargas horárias:*/
+
+SELECT P.nome_professor, P.sobrenome_professor, D.nome_disciplina, D.carga_horaria
+FROM PROFESSOR P INNER JOIN PROFESSOR_DISCIPLINA PD 
+ON P.id_Professor = PD.id_Professor
+INNER JOIN DISCIPLINA D 
+ON D.id_disciplina = PD.id_disciplina;
+
+
+
