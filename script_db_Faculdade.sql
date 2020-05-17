@@ -254,6 +254,22 @@ INSERT INTO ENDERECO_ALUNO(ra, id_tipo_logradouro, nome_rua, numero_rua, complem
     (5, 3, 'Santos', 1856, 'Casa 05', 04523963),
     (6, 4, 'Matão', 206, 'Casa 06', 04213650);
 
+INSERT INTO TELEFONE_ALUNO(ra, telefone, id_tipo_telefone)
+    VALUES
+    (1, '87533-211', 1),
+    (2, '87432-876', 3),
+    (3, '87324-768', 2),
+    (4, '87324-456', 1),
+    (5, '86235-345', 2),
+    (6, '89435-321', 2);
+
+INSERT INTO TIPO_TELEFONE(tipo_telefone)
+    VALUES
+    ('comerc.'),
+    ('pessoal'),
+    ('trabalho');
+
+
 /*Alterar campo nota da tabela DISCIPLINA_HISTORICO para FLOAT 
 este comando modifica o tipo do atributo*/
 
@@ -265,36 +281,72 @@ INSERT INTO DISCIPLINA_HISTORICO(id_historico, id_disciplina, nota, frequencia)
     (2, 3, 8.5, 2), /*Gabriel - Programação em C (cod 3)*/
     (3, 1, 6.8, 8); /*Beatriz - Raciocínio Lógico (cod1)*/
     
-/*1. ras, nomes e sobrenomes dos alunos, nomes dos cursos e períodos*/
+/*1. ras, nomes e sobrenomes dos alunos, nomes dos cursos e períodos, 
+ordenados pelo primeiro nome de aluno:*/
 
-SELECT ALUNO.nome_aluno, ALUNO.sobrenome_aluno, 
-CURSO.nome_curso, TURMA.periodo FROM ALUNO
-INNER JOIN CURSO ON CURSO.id_curso = ALUNO.id_curso
-INNER JOIN TURMA ON TURMA.id_turma = ALUNO.id_turma;
+SELECT A.ra, A.nome_aluno, A.sobrenome_aluno, 
+C.nome_curso, T.periodo FROM ALUNO A
+	INNER JOIN CURSO C 
+	ON C.id_curso = A.id_curso
+	INNER JOIN TURMA T
+	ON T.id_turma = A.id_turma
+	ORDER BY A.nome_aluno; 
 
 /*2. Todas as disciplinas cursadas por um aluno, com suas respectivas notas:
 Aluno: RA 3 (Beatriz) nome, sobrenome, nome da disciplina e nota*/
 
 SELECT A.nome_aluno, A.sobrenome_aluno,
 D.nome_disciplina, DH.nota FROM ALUNO A 
-INNER JOIN ALUNO_DISCIPLINA AD
-ON A.ra = AD.ra 
-INNER JOIN DISCIPLINA D 
-ON D.id_disciplina = AD.id_disciplina
-INNER JOIN HISTORICO H
-ON A.ra = H.ra
-INNER JOIN DISCIPLINA_HISTORICO DH
-ON H.id_historico = DH.id_historico
-WHERE A.ra = 3;
+	INNER JOIN ALUNO_DISCIPLINA AD
+	ON A.ra = AD.ra 
+	INNER JOIN DISCIPLINA D 
+	ON D.id_disciplina = AD.id_disciplina
+	INNER JOIN HISTORICO H
+	ON A.ra = H.ra
+	INNER JOIN DISCIPLINA_HISTORICO DH
+	ON H.id_historico = DH.id_historico
+	WHERE A.ra = 3;
 
 /*3. Nomes e sobrenomes dos professores, e disciplinas que ministram com suas 
-cargas horárias:*/
+cargas horárias ordenados pelo primeiro nome da disciplina:*/
 
-SELECT P.nome_professor, P.sobrenome_professor, D.nome_disciplina, D.carga_horaria
-FROM PROFESSOR P INNER JOIN PROFESSOR_DISCIPLINA PD 
-ON P.id_Professor = PD.id_Professor
-INNER JOIN DISCIPLINA D 
-ON D.id_disciplina = PD.id_disciplina;
+SELECT CONCAT(P.Nome_Professor,'', P.Sobrenome_Professor) AS DOCENTE,
+D.nome_disciplina, D.carga_horaria FROM PROFESSOR 
+	INNER JOIN PROFESSOR_DISCIPLINA PD 
+	ON P.id_Professor = PD.id_Professor
+	INNER JOIN DISCIPLINA D
+	ON D.id_disciplina = PD.id_disciplina
+	ORDER BY P.Nome_Professor; 
 
+/*4. Gerar "relatório" com nomes, sobrenomes, CPF dos alunos, tipos e números
+ de telefones e endereços completos.*/
+ 
+ SELECT CONCAT(A.nome_aluno,' ', A.sobrenome_aluno) AS ALUNOS, A.cpf,
+ CONCAT(TA.telefone,', ', TT.tipo_telefone) AS TELEFONES, CONCAT(TL.tipo_logradouro,
+ ' ', EA.nome_rua,', ', EA.numero_rua) AS LOGRADOUROS, EA.cep, EA.complemento
+ FROM ALUNO A 
+		 INNER JOIN TELEFONE_ALUNO TA
+		 ON A.ra = TA.ra 
+		 INNER JOIN TIPO_TELEFONE TT
+		 ON TT.id_tipo_telefone = TA.id_tipo_telefone
+		 INNER JOIN ENDERECO_ALUNO EA
+		 ON A.ra = EA.ra
+		 INNER JOIN TIPO_LOGRADOURO TL
+		 ON TL.id_tipo_logradouro = EA.id_tipo_logradouro;
 
+-- 5. Listar as disciplinas, indicando seus departamentos, cursos e professores
 
+SELECT D.nome_disciplina, DEP.nome_departamento, C.nome_curso,
+CONCAT(P.Nome_Professor,' ', P.Sobrenome_Professor)
+AS DOCENTE FROM DISCIPLINA D 
+		INNER JOIN DEPARTAMENTO DEP 
+		ON DEP.id_departamento = D.id_departamento
+		INNER JOIN CURSO_DISCIPLINA CD
+		ON D.id_disciplina = CD.id_disciplina
+		INNER JOIN CURSO C
+		ON C.id_curso = CD.id_curso
+		INNER JOIN PROFESSOR_DISCIPLINA PD
+		ON D.id_disciplina = PD.id_disciplina
+		INNER JOIN PROFESSOR P
+		ON P.id_Professor = PD.id_Professor
+		ORDER BY D.nome_disciplina;
