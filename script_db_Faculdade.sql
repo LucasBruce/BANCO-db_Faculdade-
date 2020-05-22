@@ -108,6 +108,33 @@ CREATE TABLE DISCIPLINA(
       (id_disciplina_depende) REFERENCES DISCIPLINA (id_disciplina)
 );
 
+/*A tabela DISCIPLINA_1 é criada para evitar a 
+ repetição de PROFESSOR e ALUNO, pois respectivamento professor
+ e aluno podem ministrar e cursar mais de uma disciplina ou seja
+ ainda podem ser criadas mais tabelas DISCIPLINA_2, 
+ DISCIPLINA_3..., mas no momento para estudo será criada
+ apenas a DISCIPLINA_SEGUNDARIA*/
+ 
+ CREATE TABLE IF NOT EXISTS DISCIPLINA_1(
+   id_disciplina_1 SMALLINT PRIMARY KEY AUTO_INCREMENT,
+   nome_disciplina_1 VARCHAR(30) NOT NULL,
+   descricao_1 VARCHAR(200),
+   numero_aluno_1 SMALLINT NOT NULL,
+   carga_horaria_1 SMALLINT NOT NULL,
+   id_disciplina SMALLINT NOT NULL,
+   id_disciplina_depende_1 SMALLINT NOT NULL, /*auto-relacionamento disciplina depende de disciplina*/
+   id_departamento SMALLINT NOT NULL,
+   id_disciplina_1 SMALLINT,
+   CONSTRAINT fk_id_disciplina_1_departamento FOREIGN KEY (id_departamento)
+     REFERENCES DEPARTAMENTO (id_departamento),
+   CONSTRAINT fk_id_disciplina_1_disciplina FOREIGN KEY (id_disciplina)
+     REFERENCES DISCIPLINA (id_disciplina),
+   CONSTRAINT fk_id_disciplina_1_depende FOREIGN KEY (id_disciplina_depende_1)
+     REFERENCES DISCIPLINA_1 (id_disciplina_1),
+   CONSTRAINT fk_id_disciplina_disciplina_1 FOREIGN KEY (id_disciplina_1) 
+     REFERENCES DISCIPLINA_1 (id_disciplina_1)
+ );
+
 CREATE TABLE HISTORICO(
    id_historico SMALLINT PRIMARY KEY AUTO_INCREMENT,
    data_inicio DATE NOT NULL,
@@ -118,7 +145,7 @@ CREATE TABLE HISTORICO(
 ); 
 
 CREATE TABLE DISCIPLINA_HISTORICO(
-   nota DECIMAL NOT NULL,
+   nota FLOAT NOT NULL,
    frequencia VARCHAR(2) NOT NULL,
    id_historico SMALLINT,
    id_disciplina SMALLINT,
@@ -128,6 +155,19 @@ CREATE TABLE DISCIPLINA_HISTORICO(
    CONSTRAINT fk_id_disciplina_historico FOREIGN KEY (id_disciplina)
      REFERENCES DISCIPLINA (id_disciplina)
 );
+
+CREATE TABLE IF NOT EXISTS DISCIPLINA_HISTORICO_1(
+   nota_1 FLOAT NOT NULL,
+   frequencia_1 VARCHAR(2) NOT NULL,
+   id_historico SMALLINT,
+   id_disciplina_1 SMALLINT,
+   PRIMARY KEY(id_historico, id_disciplina_1),
+   CONSTRAINT fk_disciplina_historico_1_historico FOREIGN KEY(id_historico)
+     REFERENCES HISTORICO(id_historico),
+   CONSTRAINT fk_disciplina_historico_1_disciplina_1 FOREIGN KEY(id_disciplina_1)
+     REFERENCES DISCIPLINA_1(id_disciplina_1)
+);
+
 
 CREATE TABLE CURSO_DISCIPLINA(
    id_curso SMALLINT,
@@ -139,6 +179,17 @@ CREATE TABLE CURSO_DISCIPLINA(
      REFERENCES DISCIPLINA (id_disciplina) 
 );
 
+CREATE TABLE IF NOT EXISTS CURSO_DISCIPLINA_1(
+   id_curso SMALLINT,
+   id_disciplina_1 SMALLINT,
+   PRIMARY KEY(id_curso, id_disciplina_1),
+   CONSTRAINT fk_curso_disciplina_1_curso FOREIGN KEY(id_curso)
+     REFERENCES CURSO(id_curso),
+   CONSTRAINT fk_curso_disciplina_1_disciplina_1 FOREIGN KEY(id_disciplina_1)
+     REFERENCES DISCIPLINA_1(id_disciplina_1)
+);
+
+
 CREATE TABLE PROFESSOR_DISCIPLINA(
    id_professor SMALLINT,
    id_disciplina SMALLINT,
@@ -149,6 +200,18 @@ CREATE TABLE PROFESSOR_DISCIPLINA(
      REFERENCES DISCIPLINA (id_disciplina)
 );
 
+/*criando a entidade associativa ALUNO_DISCIPLINA_1 e PROFESSOR_DISCIPLINA_1
+para evitar o relacionamento n-ário*/
+CREATE TABLE IF NOT EXISTS PROFESSOR_DISCIPLINA_1(
+  id_professor SMALLINT NOT NULL,
+  id_disciplina_1 SMALLINT NOT NULL,
+  PRIMARY KEY(id_professor, id_disciplina_1),
+  CONSTRAINT fk_id_professor_disciplina_1 FOREIGN KEY (id_disciplina_1)
+    REFERENCES DISCIPLINA_1 (id_disciplina_1),
+  CONSTRAINT fk_disciplina_1_professor FOREIGN KEY (id_professor)
+    REFERENCES PROFESSOR (id_professor)
+);
+
 CREATE TABLE ALUNO_DISCIPLINA(
    ra SMALLINT,
    id_disciplina SMALLINT,
@@ -157,6 +220,18 @@ CREATE TABLE ALUNO_DISCIPLINA(
      REFERENCES ALUNO (ra),
    CONSTRAINT fk_id_disciplina_aluno FOREIGN KEY (id_disciplina)
      REFERENCES DISCIPLINA (id_disciplina)
+);
+
+/*criando a entidade associativa ALUNO_DISCIPLINA_1 e PROFESSOR_DISCIPLINA_1
+para evitar o relacionamento n-ário*/
+CREATE TABLE IF NOT EXISTS ALUNO_DISCIPLINA_1(
+   ra SMALLINT NOT NULL,
+   id_disciplina_1 SMALLINT NOT NULL,
+   PRIMARY KEY(ra, id_disciplina_1),
+   CONSTRAINT fk_aluno_disciplina_1_ra FOREIGN KEY (ra)
+     REFERENCES ALUNO (ra),
+   CONSTRAINT fk_aluno_disciplina_1_disciplina_1 FOREIGN KEY (id_disciplina_1)
+     REFERENCES DISCIPLINA_1 (id_disciplina_1)
 );
 
 /*script de inserção de dados nas tabelas do banco (carga de dados para teste)*/
@@ -198,6 +273,13 @@ descricao, numero_aluno)
     ('Psicologia Cognitiva', 1, 1400, 'Entender o funcionamento do aprendizado', 30),
     ('Programação em C', 2, 1200, 'Aprender uma linguagem de programação', 20),
     ('Eletrônica Digital', 2, 300, 'Funcionamento de circuitos digitais', 30);
+
+/*INSERT INTO DISCIPLINA_1(nome_disciplina_1, id_departamento, descricao_1, 
+numero_aluno_1, carga_horaria_1)
+    VALUES
+    (),
+    (),
+    (),*/
     
 INSERT INTO ALUNO(nome_aluno, sobrenome_aluno, cpf, status_aluno,
 id_turma, sexo, id_curso, nome_pai, nome_mae, email, whatsapp)
@@ -229,8 +311,7 @@ INSERT INTO PROFESSOR_DISCIPLINA(id_professor, id_disciplina)
     VALUES
     (2, 1),
     (1, 2),
-    (3, 3),
-    (2, 4);
+    (3, 3);
 
 INSERT INTO HISTORICO(ra, data_inicio, data_final)
     VALUES
@@ -311,13 +392,14 @@ D.nome_disciplina, DH.nota FROM ALUNO A
 cargas horárias ordenados pelo primeiro nome da disciplina:*/
 
 SELECT CONCAT(P.Nome_Professor,'', P.Sobrenome_Professor) AS DOCENTE,
-D.nome_disciplina, D.carga_horaria FROM PROFESSOR 
+D.nome_disciplina, D.carga_horaria FROM PROFESSOR P
 	INNER JOIN PROFESSOR_DISCIPLINA PD 
 	ON P.id_Professor = PD.id_Professor
 	INNER JOIN DISCIPLINA D
 	ON D.id_disciplina = PD.id_disciplina
 	ORDER BY P.Nome_Professor; 
 
+SELECT CONCAT(Nome_Professor,' ', Sobrenome_Professor) AS DOCENTE FROM PROFESSOR;
 /*4. Gerar "relatório" com nomes, sobrenomes, CPF dos alunos, tipos e números
  de telefones e endereços completos.*/
  
@@ -350,3 +432,7 @@ AS DOCENTE FROM DISCIPLINA D
 		INNER JOIN PROFESSOR P
 		ON P.id_Professor = PD.id_Professor
 		ORDER BY D.nome_disciplina;
+
+SELECT CONCAT(Nome_Professor,' ', Sobrenome_Professor),
+ id_Professor AS DOCENTE FROM PROFESSOR;
+ 
