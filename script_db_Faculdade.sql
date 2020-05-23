@@ -19,7 +19,6 @@ CREATE TABLE PROFESSOR (
 	   REFERENCES DEPARTAMENTO (id_departamento)
 );
 
-
 CREATE TABLE CURSO(
    id_curso SMALLINT PRIMARY KEY AUTO_INCREMENT,
    nome_curso VARCHAR(40) NOT NULL,
@@ -102,6 +101,9 @@ CREATE TABLE DISCIPLINA(
    carga_horaria SMALLINT NOT NULL,
    id_disciplina_depende SMALLINT, /*auto-relacionamento disciplina depende de disciplina*/
    id_departamento SMALLINT,
+   id_disciplina_1 SMALLINT,
+   CONSTRAINT fk_id_disciplina_disciplina_1 FOREIGN KEY (id_disciplina_1)
+      REFERENCES DISCIPLINA(id_disciplina),
    CONSTRAINT fk_id_departamento_disciplina FOREIGN KEY
       (id_departamento) REFERENCES DEPARTAMENTO (id_departamento),
    CONSTRAINT fk_id_disciplina_depende_disciplina FOREIGN KEY
@@ -113,7 +115,7 @@ CREATE TABLE DISCIPLINA(
  e aluno podem ministrar e cursar mais de uma disciplina ou seja
  ainda podem ser criadas mais tabelas DISCIPLINA_2, 
  DISCIPLINA_3..., mas no momento para estudo será criada
- apenas a DISCIPLINA_SEGUNDARIA*/
+ apenas a DISCIPLINA_1*/
  
  CREATE TABLE IF NOT EXISTS DISCIPLINA_1(
    id_disciplina_1 SMALLINT PRIMARY KEY AUTO_INCREMENT,
@@ -317,7 +319,9 @@ INSERT INTO HISTORICO(ra, data_inicio, data_final)
     VALUES
     (2, '2016-05-12', '2017-10-15'),
     (3, '2014-05-12', '2020-03-05'),
-    (1, '2010-05-12', '2012-05-10');
+    (1, '2010-05-12', '2012-05-10'),
+    (4, '2011-05-12', '2013-10-15'),
+    (6, '2009-05-12', '2011-03-05');
 
 INSERT INTO TIPO_LOGRADOURO(tipo_logradouro)
     VALUES
@@ -361,7 +365,13 @@ INSERT INTO DISCIPLINA_HISTORICO(id_historico, id_disciplina, nota, frequencia)
     (1, 2, 7, 6),  /*Marcos - Psicologia Cognitiva (cod 2)*/
     (2, 3, 8.5, 2), /*Gabriel - Programação em C (cod 3)*/
     (3, 1, 6.8, 8); /*Beatriz - Raciocínio Lógico (cod1)*/
-    
+  
+INSERT INTO DISCIPLINA_HISTORICO_1(id_historico, id_disciplina_1, nota_1, frequencia_1)
+    VALUES
+    (3, 2, 6.4, 5),/*Marcos - Programacao em Java*/
+    (5, 3, 7.8, 8),  /*Monica - Antropologia*/
+    (4, 1, 9.5, 9); /*Jorge - Banco de Dados*/
+
 /*1. ras, nomes e sobrenomes dos alunos, nomes dos cursos e períodos, 
 ordenados pelo primeiro nome de aluno:*/
 
@@ -376,8 +386,8 @@ C.nome_curso, T.periodo FROM ALUNO A
 /*2. Todas as disciplinas cursadas por um aluno, com suas respectivas notas:
 Aluno: RA 3 (Beatriz) nome, sobrenome, nome da disciplina e nota*/
 
-SELECT A.nome_aluno, A.sobrenome_aluno,
-D.nome_disciplina, DH.nota FROM ALUNO A 
+SELECT A.nome_aluno, A.sobrenome_aluno, 
+D.nome_disciplina, DH.nota, H.id_historico, D.id_disciplina, A.ra FROM ALUNO A 
 	INNER JOIN ALUNO_DISCIPLINA AD
 	ON A.ra = AD.ra 
 	INNER JOIN DISCIPLINA D 
@@ -391,7 +401,7 @@ D.nome_disciplina, DH.nota FROM ALUNO A
 /*3. Nomes e sobrenomes dos professores, e disciplinas que ministram com suas 
 cargas horárias ordenados pelo primeiro nome da disciplina:*/
 
-SELECT CONCAT(P.Nome_Professor,'', P.Sobrenome_Professor) AS DOCENTE,
+SELECT CONCAT(P.Nome_Professor,' ', P.Sobrenome_Professor) AS DOCENTE,
 D.nome_disciplina, D.carga_horaria FROM PROFESSOR P
 	INNER JOIN PROFESSOR_DISCIPLINA PD 
 	ON P.id_Professor = PD.id_Professor
