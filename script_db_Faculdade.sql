@@ -402,14 +402,18 @@ D.nome_disciplina, DH.nota, H.id_historico, D.id_disciplina, A.ra FROM ALUNO A
 cargas horárias ordenados pelo primeiro nome da disciplina:*/
 
 SELECT CONCAT(P.Nome_Professor,' ', P.Sobrenome_Professor) AS DOCENTE,
-D.nome_disciplina, D.carga_horaria FROM PROFESSOR P
+CONCAT(D.nome_disciplina,', ',D.carga_horaria,'h') AS DISCIPLINA_CARGA_HORARIA, 
+CONCAT(D1.nome_disciplina_1,', ',D1.carga_horaria_1,'h') AS DISCIPLINA_1_CARGA_HORARIA_1 FROM PROFESSOR P
 	INNER JOIN PROFESSOR_DISCIPLINA PD 
 	ON P.id_Professor = PD.id_Professor
 	INNER JOIN DISCIPLINA D
 	ON D.id_disciplina = PD.id_disciplina
-	ORDER BY P.Nome_Professor; 
+    INNER JOIN PROFESSOR_DISCIPLINA_1 PD1
+    ON P.id_Professor = PD1.id_Professor
+    INNER JOIN DISCIPLINA_1 D1
+	ON D1.id_disciplina_1 = PD1.id_disciplina_1
+    ORDER BY P.Nome_Professor; 
 
-SELECT CONCAT(Nome_Professor,' ', Sobrenome_Professor) AS DOCENTE FROM PROFESSOR;
 /*4. Gerar "relatório" com nomes, sobrenomes, CPF dos alunos, tipos e números
  de telefones e endereços completos.*/
  
@@ -430,7 +434,7 @@ SELECT CONCAT(Nome_Professor,' ', Sobrenome_Professor) AS DOCENTE FROM PROFESSOR
 
 SELECT D.nome_disciplina, DEP.nome_departamento, C.nome_curso,
 CONCAT(P.Nome_Professor,' ', P.Sobrenome_Professor)
-AS DOCENTE FROM DISCIPLINA D 
+AS DOCENTE FROM DISCIPLINA D /*PROFESSOR P*/
 		INNER JOIN DEPARTAMENTO DEP 
 		ON DEP.id_departamento = D.id_departamento
 		INNER JOIN CURSO_DISCIPLINA CD
@@ -443,6 +447,18 @@ AS DOCENTE FROM DISCIPLINA D
 		ON P.id_Professor = PD.id_Professor
 		ORDER BY D.nome_disciplina;
 
-SELECT CONCAT(Nome_Professor,' ', Sobrenome_Professor),
- id_Professor AS DOCENTE FROM PROFESSOR;
+/*6. Todas as disciplinas cursadas por um aluno, com suas respectivas:
+Aluno: nome, sobrenome, nome das disciplinas*/
+ 
+ SELECT CONCAT(A.nome_aluno,' ',A.sobrenome_aluno) AS ALUNO, 
+ D.nome_disciplina, D1.nome_disciplina_1 FROM ALUNO A
+	 INNER JOIN ALUNO_DISCIPLINA AD 
+     ON A.ra = AD.ra
+	 INNER JOIN DISCIPLINA D 
+     ON D.id_disciplina = AD.id_disciplina
+	 INNER JOIN ALUNO_DISCIPLINA_1 AD1 
+     ON A.ra = AD1.ra
+	 INNER JOIN DISCIPLINA_1 D1 
+     ON D1.id_disciplina_1 = AD1.id_disciplina_1; 
+
  
