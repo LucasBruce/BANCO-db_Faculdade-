@@ -20,3 +20,5 @@ Fases:
 
 obs: Lembrando que eventualmento vão aparecendo novas entidades, atributos, relacionamentos, pois o trabalho
 de análise ainda continua por todo o projeto para diminuir erros na Implementação do banco de dados.
+
+obs:avaliar em um sistema já construido se há a necessidade de criar index para as tabelas que são mais consultadas para melhorar peformace. 
