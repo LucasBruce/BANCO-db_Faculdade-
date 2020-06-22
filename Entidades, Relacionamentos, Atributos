@@ -62,8 +62,7 @@ Objetivo do Banco de Dados: Realizar o controle centralizado de alunos, professo
         #descrição curricular
         #id_departamento
         #num_alunos
-        #carga_horaria
-    
+        #carga_horaria   
     
      
 -Atributos de Departamento:
